@@ -1,0 +1,12 @@
+# Ignore Python cache and venv
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+db.sqlite3
+
+# Ignore VSCode or editor stuff (optional)
+.vscode/
+.idea/
+
