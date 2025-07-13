@@ -102,7 +102,7 @@ const ProducerProfile = () => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700">Produit recherché</label>
-          <input type="text" className="w-full border rounded px-3 py-2 mt-1" placeholder="Ex: Dattes biologiques" />
+          <input type="text" className="w-full border rounded px-3 py-2 mt-1" placeholder="Ex: Dattes" />
         </div>
 
         <div>
