@@ -15,15 +15,15 @@ export default function Footer() {
     <footer className="bg-black text-white py-12 px-8 border-t-4 border-orange-500">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-          {/* Logo & Description */}
+   
           <div>
-            <h3 className="text-2xl font-extrabold mb-4 text-white">AlgerExport</h3>
+            <h3 className="text-2xl font-extrabold mb-4 text-white">Kleer Infini</h3>
             <p className="text-gray-300 mb-4">
               La plateforme pour importer ou exporter facilement depuis l'Algérie.
             </p>
           </div>
 
-          {/* Quick Links */}
+       
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Liens Rapides</h3>
             <ul className="space-y-2">
@@ -34,7 +34,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Services */}
+     
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Services</h3>
             <ul className="space-y-2">
@@ -45,7 +45,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Language Selector */}
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Langue</h3>
             <div className="relative">
@@ -77,10 +76,9 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-400">
-            © 2024 AlgerExport. Tous droits réservés.
+            © 2024 Kleer Infini. Tous droits réservés.
           </p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <a href="#" className="text-gray-300 hover:text-orange-500 text-sm transition">
