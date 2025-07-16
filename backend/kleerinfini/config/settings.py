@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -86,6 +87,25 @@ DATABASES = {
     }
 }
 
+
+UNFOLD = {
+    "SITE_TITLE": "KleerInfini Admin",
+    "SITE_HEADER": "KleerInfini B2B Platform",
+    "SIDEBAR": {
+        "SHOW_ICONS": True,
+        "COLLAPSE": False,  # ou True pour un sidebar rétractable
+        "WIDTH": 280,       # largeur en pixels
+        "BACKGROUND_COLOR": "#1a202c",  # couleur de fond
+        "ACTIVE_COLOR": "#2563eb",      # couleur de l’item actif
+        "TEXT_COLOR": "#fff",           # couleur du texte
+    },
+    "THEME": {
+        "PRIMARY_COLOR": "#2563eb",
+        "ACCENT_COLOR": "#f59e42",
+        "DARK_MODE": True,
+    },
+    # ... d’autres options disponibles
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
