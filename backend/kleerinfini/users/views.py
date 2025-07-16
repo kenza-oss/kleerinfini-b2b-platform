@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate
 from subscriptions.models import Subscription
 from django.utils import timezone
 from datetime import timedelta
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # Create your views here.
 
@@ -30,6 +32,35 @@ class RegisterProducerView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['email', 'password'],
+            properties={
+                'email': openapi.Schema(type=openapi.TYPE_STRING, description='Adresse email'),
+                'password': openapi.Schema(type=openapi.TYPE_STRING, description='Mot de passe'),
+            },
+            example={
+                'email': 'user@example.com',
+                'password': 'votre_mot_de_passe'
+            }
+        ),
+        operation_description="Connexion utilisateur (client, producteur ou admin). Retourne un JWT si succès.",
+        responses={
+            200: openapi.Response(
+                description="Token JWT et infos utilisateur",
+                examples={
+                    "application/json": {
+                        "refresh": "<refresh_token>",
+                        "access": "<access_token>",
+                        "user": {"id": "<uuid>", "role": "producer"}
+                    }
+                }
+            ),
+            401: "Mot de passe incorrect.",
+            404: "Utilisateur non trouvé."
+        }
+    )
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():

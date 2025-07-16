@@ -2,6 +2,20 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="KleerInfini API",
+        default_version='v1',
+        description="Documentation interactive de l’API KleerInfini (auth, abonnements, notifications, etc.)",
+        contact=openapi.Contact(email="support@kleerinfini.com"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 def adminpanel_info(request):
     return HttpResponse('''
@@ -88,6 +102,19 @@ def adminpanel_info(request):
                     font-size: 0.98em;
                     display: inline-block;
                 }
+                .dev-section {
+                    background: #f3f4f6;
+                    border: 1px solid #d1d5db;
+                    border-radius: 8px;
+                    margin: 32px 0 0 0;
+                    padding: 18px 22px;
+                    font-size: 1.04em;
+                }
+                .dev-section h2 {
+                    color: #406e8e;
+                    font-size: 1.18em;
+                    margin-top: 0;
+                }
                 @media (max-width: 600px) {
                     .header h1 { font-size: 1.5rem; }
                     .container { padding: 10px 2vw; }
@@ -139,6 +166,19 @@ def adminpanel_info(request):
                         <li>Pour toute question, contactez l’équipe technique ou le support.</li>
                     </ul>
                 </div>
+                <div class="dev-section">
+                    <h2>Pour les développeurs : Documentation Swagger</h2>
+                    <p>
+                        Toute l’API backend est documentée et testable en ligne via Swagger UI.<br>
+                        <b>Accès rapide :</b> <a href="/swagger/" target="_blank">/swagger/</a><br>
+                        <b>Version lecture seule :</b> <a href="/redoc/" target="_blank">/redoc/</a><br>
+                        <ul>
+                            <li>Vous pouvez explorer tous les endpoints, voir les paramètres, les réponses, et tester les requêtes directement depuis Swagger.</li>
+                            <li>Pour les routes protégées, cliquez sur “Authorize” et entrez votre token JWT (Bearer) pour tester les endpoints sécurisés.</li>
+                            <li>La documentation est générée automatiquement à partir du code et des serializers DRF.</li>
+                        </ul>
+                    </p>
+                </div>
                 <div class="note">
                     <b>Résumé :</b><br>
                     Cette interface admin vous permet de piloter toute la plateforme KleerInfini sans connaissance technique avancée. Suivez les étapes ci-dessus, et n’hésitez pas à demander de l’aide si besoin.
@@ -158,4 +198,8 @@ urlpatterns = [
     path('api/', include('users.urls')),
     path('api/', include('subscriptions.urls')),
     path('api/', include('clients.urls')),
+    path('api/', include('notifications.urls')),
+    path('api/', include('admin_panel.urls')),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
