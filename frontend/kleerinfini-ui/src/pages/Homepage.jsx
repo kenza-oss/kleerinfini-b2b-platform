@@ -1,6 +1,6 @@
 import React from "react";
 
-
+import BussinesSection from "../components/BussinesSection";
 import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
 import SearchSection from "../components/SearchSection";
@@ -17,10 +17,19 @@ function Homepage() {
       <Header />
       <HeroSection />
       <SearchSection />
+     
       <ExportProductsSection />
-      <StepsGuideSection />
-      <Whychoose />
       <Signup />
+      <BussinesSection />
+      
+      <StepsGuideSection />
+       
+       
+        
+      
+       
+      <Whychoose />
+   
       <Footer />
  
     </div>
