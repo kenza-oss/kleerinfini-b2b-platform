@@ -9,11 +9,11 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/Products" element={<Products />} />
-         <Route path="/ProductDetails" element={<ProductDetails />} />
+{/*         <Route path="/" element={<Homepage />} /> */}
+        <Route path="/" element={<Products />} />
+{/*          <Route path="/ProductDetails" element={<ProductDetails />} />
         <Route path="/producer/:id" element={<ProducerProfile />} />
-        <Route path="/producer-inscription" element={<ProducerRegister />} />
+        <Route path="/producer-inscription" element={<ProducerRegister />} /> */}
       </Routes>
     </Router>
   );
