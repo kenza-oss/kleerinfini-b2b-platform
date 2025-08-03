@@ -7,6 +7,11 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import Select from 'react-select';
 import countryList from 'country-list';
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer } from 'react-leaflet';
+import LocationMarker from '../components/LocationMarker';
+
+
 import {
   FaBuilding,
   FaIndustry,
@@ -14,12 +19,20 @@ import {
   FaPhone,
   FaGlobe,
   FaFileAlt,
-  FaLanguage,
-  FaLink
+  FaExpand,
+  FaCompress
 } from 'react-icons/fa';
-import backgroundVideo from '../assets/video2.mp4';
+
+// Import different background videos for each step
+import step1Video from '../assets/video3.mp4';
+import step2Video from '../assets/video4.mp4';
+import step3Video from '../assets/video5.mp4';
+import step4Video from '../assets/video6.mp4';
 
 const steps = ['Entreprise', 'Documents', 'Exportation', 'Finalisation'];
+
+// Map steps to videos
+const stepVideos = [step1Video, step2Video, step3Video, step4Video];
 
 const schema = yup.object().shape({
   companyName: yup.string().required('Champ requis'),
@@ -42,47 +55,57 @@ const schema = yup.object().shape({
 
 const ProducerRegister = () => {
   const [step, setStep] = useState(0);
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
-  });
+  const [markerPosition, setMarkerPosition] = useState(null);
+  const [isMapExpanded, setIsMapExpanded] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({ resolver: yupResolver(schema) });
 
   const countryOptions = countryList.getData()
-    .map(country => ({
-      value: country.code,
-      label: country.name
-    }))
+    .map(country => ({ value: country.code, label: country.name }))
     .sort((a, b) => a.label.localeCompare(b.label, 'en', { sensitivity: 'base' }));
 
   const onSubmit = (data) => {
-    console.log(data);
-    alert('Formulaire soumis!');
+    if (!markerPosition) {
+      alert("Veuillez sélectionner votre localisation exacte sur la carte.");
+      return;
+    }
+
+    const finalData = {
+      ...data,
+      latitude: markerPosition.lat,
+      longitude: markerPosition.lng
+    };
+
+    console.log(finalData);
+    alert("Formulaire soumis avec succès!");
   };
 
   const handleNext = () => setStep(step + 1);
   const handlePrev = () => setStep(step - 1);
+  const toggleMapSize = () => setIsMapExpanded(!isMapExpanded);
 
-  // Glassmorphism input style
   const inputStyle = "w-full px-4 py-2 bg-white bg-opacity-70 text-gray-800 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder-gray-500";
-
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4">
-      {/* Video Background */}
+      {/* Dynamic background video that changes with each step */}
       <video 
         autoPlay 
         loop 
         muted 
         playsInline 
-        className="fixed top-0 left-0 w-full h-full object-cover z-0"
+        className="fixed top-0 left-0 w-full h-full object-cover z-0 transition-opacity duration-500"
+        key={step} // Important for forcing video reload
       >
-        <source src={backgroundVideo} type="video/mp4" />
+        <source src={stepVideos[step]} type="video/mp4" />
+        Your browser does not support the video tag.
       </video>
-      
-      {/* Glassmorphism Form Container */}
-      <div className="relative z-10 w-full max-w-4xl h-[700px] bg-gray-700 bg-opacity-30 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-700 border-opacity-30">
 
-        
-        {/* Form Header */}
+      <div className="relative z-10 w-full max-w-4xl h-[700px] bg-gray-700 bg-opacity-30 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-700 border-opacity-30">
         <div className="p-4 border-b border-gray-700 border-opacity-30">
           <h2 className="text-2xl font-bold text-white text-center">Inscription Producteur</h2>
           <div className="flex justify-between mt-6">
@@ -92,150 +115,114 @@ const ProducerRegister = () => {
                   ${step === i ? 'bg-blue-500' : 'bg-gray-700'} text-white`}>
                   {i + 1}
                 </div>
-                <p className={`text-sm mt-2 ${step === i ? 'text-blue-400' : 'text-gray-400'}`}>
-                  {label}
-                </p>
+                <p className={`text-sm mt-2 ${step === i ? 'text-blue-400' : 'text-gray-400'}`}>{label}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Form Content */}
-        <form onSubmit={handleSubmit(onSubmit)} className="p-4">
-          {/* Step 1 - Company Info */}
+        <form onSubmit={handleSubmit(onSubmit)} className="p-4 overflow-y-scroll h-[calc(100%-120px)]">
           {step === 0 && (
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Company Info */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <FaBuilding className="inline mr-2" />
-                    Nom entreprise *
-                  </label>
-                  <input
-                    {...register('companyName')}
-                    className={inputStyle}
-                  />
+                  <label className="block text-sm font-medium text-gray-300 mb-2"><FaBuilding className="inline mr-2" />Nom entreprise *</label>
+                  <input {...register('companyName')} className={inputStyle} />
                   {errors.companyName && <p className="text-red-400 text-xs mt-1">{errors.companyName.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <FaIndustry className="inline mr-2" />
-                    Activité principale *
-                  </label>
-                  <input
-                    {...register('activity')}
-                    className={inputStyle}
-                  />
+                  <label className="block text-sm font-medium text-gray-300 mb-2"><FaIndustry className="inline mr-2" />Activité principale *</label>
+                  <input {...register('activity')} className={inputStyle} />
                   {errors.activity && <p className="text-red-400 text-xs mt-1">{errors.activity.message}</p>}
                 </div>
 
-                {/* Contact Info */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <FaEnvelope className="inline mr-2" />
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    {...register('email')}
-                    className={inputStyle}
-                  />
+                  <label className="block text-sm font-medium text-gray-300 mb-2"><FaEnvelope className="inline mr-2" />Email *</label>
+                  <input type="email" {...register('email')} className={inputStyle} />
                   {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <FaPhone className="inline mr-2" />
-                    Téléphone *
-                  </label>
-                  <PhoneInput
-                    {...register('phone')}
-                    className="custom-phone-input"
-                  />
+                  <label className="block text-sm font-medium text-gray-300 mb-2"><FaPhone className="inline mr-2" />Téléphone *</label>
+                  <PhoneInput {...register('phone')} className="custom-phone-input" />
                   {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <FaPhone className="inline mr-2" />
-                    WhatsApp *
-                  </label>
-                  <PhoneInput
-                    {...register('whatsapp')}
-                    className="custom-phone-input"
-                  />
+                  <label className="block text-sm font-medium text-gray-300 mb-2"><FaPhone className="inline mr-2" />WhatsApp *</label>
+                  <PhoneInput {...register('whatsapp')} className="custom-phone-input" />
                   {errors.whatsapp && <p className="text-red-400 text-xs mt-1">{errors.whatsapp.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    <FaGlobe className="inline mr-2" />
-                    Pays *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2"><FaGlobe className="inline mr-2" />Pays *</label>
                   <Select
                     options={countryOptions}
-                    className="react-select-container"
                     classNamePrefix="react-select"
                     styles={{
-  control: (base) => ({
-    ...base,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    borderColor: '#d1d5db', // Tailwind border-gray-300
-    color: '#1f2937',        // Tailwind text-gray-800
-    borderRadius: '0.75rem',
-    boxShadow: 'none',
-    padding: '2px 4px'
-  }),
-  singleValue: (base) => ({
-    ...base,
-    color: '#1f2937' // dark text
-  }),
-  input: (base) => ({
-    ...base,
-    color: '#1f2937'
-  }),
-  placeholder: (base) => ({
-    ...base,
-    color: '#6b7280' // Tailwind placeholder-gray-500
-  }),
-}}
-
+                      control: (base) => ({
+                        ...base,
+                        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                        borderColor: '#d1d5db',
+                        color: '#1f2937',
+                        borderRadius: '0.75rem',
+                        boxShadow: 'none'
+                      }),
+                      singleValue: (base) => ({ ...base, color: '#1f2937' }),
+                      input: (base) => ({ ...base, color: '#1f2937' }),
+                      placeholder: (base) => ({ ...base, color: '#6b7280' })
+                    }}
                   />
                   {errors.country && <p className="text-red-400 text-xs mt-1">{errors.country.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Ville *
-                  </label>
-                  <input
-                    {...register('city')}
-                    className={inputStyle}
-                  />
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Wilaya *</label>
+                  <input {...register('city')} className={inputStyle} />
                   {errors.city && <p className="text-red-400 text-xs mt-1">{errors.city.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Adresse ligne 1 *
-                  </label>
-                  <input
-                    {...register('address1')}
-                    className={inputStyle}
-                  />
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Ville *</label>
+                  <input {...register('address1')} className={inputStyle} />
                   {errors.address1 && <p className="text-red-400 text-xs mt-1">{errors.address1.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Adresse ligne 2
-                  </label>
-                  <input
-                    {...register('address2')}
-                    className={inputStyle}
-                  />
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Adresse *</label>
+                  <input {...register('address2')} className={inputStyle} />
+                </div>
+
+                <div className={`${isMapExpanded ? 'fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center p-4' : 'col-span-2'}`}>
+                  <div className={`relative ${isMapExpanded ? 'w-full h-full max-w-4xl' : 'w-full'}`}>
+                    <div className={`${isMapExpanded ? 'h-[80vh]' : 'h-48'} rounded-xl overflow-hidden border border-gray-500 transition-all duration-300`}>
+                      <MapContainer 
+                        center={[36.75, 3.05]} 
+                        zoom={isMapExpanded ? 10 : 6} 
+                        style={{ height: "100%", width: "100%" }} 
+                        scrollWheelZoom={true}
+                      >
+                        <TileLayer
+                          attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <LocationMarker setMarkerPosition={setMarkerPosition} />
+                      </MapContainer>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={toggleMapSize}
+                      className="absolute top-2 right-2 bg-white bg-opacity-80 p-2 rounded-full shadow-md hover:bg-opacity-100 transition"
+                    >
+                      {isMapExpanded ? <FaCompress /> : <FaExpand />}
+                    </button>
+                    {markerPosition && (
+                      <p className="text-sm text-green-300 mt-2">
+                        Localisation sélectionnée: {markerPosition.lat.toFixed(5)}, {markerPosition.lng.toFixed(5)}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -339,35 +326,89 @@ const ProducerRegister = () => {
                   {errors.yearlyCapacity && <p className="text-red-400 text-xs mt-1">{errors.yearlyCapacity.message}</p>}
                 </div>
 
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Marchés cibles
-                  </label>
-                  <select
-                    multiple
-                    className={inputStyle}
-                  >
-                    <option value="Afrique">Afrique</option>
-                    <option value="Europe">Europe</option>
-                    <option value="Amérique du Nord">Amérique du Nord</option>
-                  </select>
-                </div>
+{/* Marchés cibles */}
+<div className="col-span-2">
+  <label className="block text-sm font-medium text-gray-300 mb-2">
+    Marchés cibles
+  </label>
+  <Select
+    isMulti
+    options={[
+      { value: 'Afrique', label: 'Afrique' },
+      { value: 'Europe', label: 'Europe' },
+      { value: 'Amérique du Nord', label: 'Amérique du Nord' },
+      { value: 'Amérique du Sud', label: 'Amérique du Sud' },
+      { value: 'Asie', label: 'Asie' },
+      { value: 'Moyen-Orient', label: 'Moyen-Orient' }
+    ]}
+    className="react-select-container"
+    classNamePrefix="react-select"
+    placeholder="Sélectionnez les marchés cibles..."
+    noOptionsMessage={() => "Aucune option disponible"}
+    styles={{
+      control: (base) => ({
+        ...base,
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        borderColor: '#d1d5db',
+        color: '#1f2937',
+        borderRadius: '0.75rem',
+        minHeight: '42px'
+      }),
+      multiValue: (base) => ({
+        ...base,
+        backgroundColor: 'rgba(59, 130, 246, 0.2)'
+      }),
+      multiValueLabel: (base) => ({
+        ...base,
+        color: '#1f2937'
+      })
+    }}
+  />
+</div>
 
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Catégories exportables *
-                  </label>
-                  <select
-                    multiple
-                    {...register('exportCategories')}
-                    className={inputStyle}
-                  >
-                    <option value="Alimentaire">Produits Alimentaires</option>
-                    <option value="Textile">Textiles</option>
-                    <option value="Artisanat">Artisanat</option>
-                  </select>
-                  {errors.exportCategories && <p className="text-red-400 text-xs mt-1">{errors.exportCategories.message}</p>}
-                </div>
+{/* Catégories exportables */}
+<div className="col-span-2">
+  <label className="block text-sm font-medium text-gray-300 mb-2">
+    Catégories exportables *
+  </label>
+  <Select
+    isMulti
+    {...register('exportCategories')}
+    options={[
+      { value: 'Alimentaire', label: 'Produits Alimentaires' },
+      { value: 'Textile', label: 'Textiles' },
+      { value: 'Artisanat', label: 'Artisanat' },
+      { value: 'Cosmétiques', label: 'Cosmétiques Naturels' },
+      { value: 'Technologie', label: 'Technologie' },
+      { value: 'Agriculture', label: 'Produits Agricoles' }
+    ]}
+    className="react-select-container"
+    classNamePrefix="react-select"
+    placeholder="Sélectionnez les catégories..."
+    noOptionsMessage={() => "Aucune option disponible"}
+    styles={{
+      control: (base) => ({
+        ...base,
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        borderColor: errors.exportCategories ? '#ef4444' : '#d1d5db',
+        color: '#1f2937',
+        borderRadius: '0.75rem',
+        minHeight: '42px'
+      }),
+      multiValue: (base) => ({
+        ...base,
+        backgroundColor: 'rgba(59, 130, 246, 0.2)'
+      }),
+      multiValueLabel: (base) => ({
+        ...base,
+        color: '#1f2937'
+      })
+    }}
+  />
+  {errors.exportCategories && (
+    <p className="text-red-400 text-xs mt-1">{errors.exportCategories.message}</p>
+  )}
+</div>
               </div>
             </div>
           )}
