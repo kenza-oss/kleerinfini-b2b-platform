@@ -1,5 +1,6 @@
 import React from "react";
-import logo from "../assets/logo.png";
+import logo from "./logo.png"; // Assurez-vous que le chemin vers votre logo est correct
+import LanguageSelector from "./LanguageSelector.jsx"; // Assurez-vous que ce composant existe et est correctement importé
 
 export default function Header() {
   return (
@@ -10,7 +11,7 @@ export default function Header() {
           <img src={logo} alt="Logo" className="w-28 h-auto object-contain" />
         </div>
 
-      
+        <LanguageSelector />
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-4 text-sm lg:text-lg w-full lg:w-auto">
           <a href="#" className="hover:underline px-2">
             Se connecter / S'inscrire

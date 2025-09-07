@@ -1,0 +1,138 @@
+{
+  "welcome": "Welcome",
+  "logout": "Logout",
+  "profile": "My profile",
+  "language": "Language",
+  "messages": "Messages",
+  
+  "about": {
+    "title": "WHO ARE WE?",
+    "description": "Kleer Infini is an Algerian tech company specializing in the development of digital and commercial solutions dedicated to national and international B2B markets. Our mission is to support the digital transformation of businesses, strengthen their export competitiveness, and provide them with concrete tools for prospecting, marketing, and commercial networking. Founded by a multidisciplinary team, Kleer Infini combines technology, international trade, and market intelligence skills to offer a unique value-added platform.",
+    "button": "Our missions",
+    "missionsTitle": "Our mission",
+    "mission1": "Simplify and modernize B2B sales, export processes, and lead generation.",
+    "mission2": "Provide a reliable, multilingual, and constantly updated platform with decision support tools.",
+    "mission3": "Enhance international visibility of Algerian companies through powerful digital solutions.",
+    "offersTitle": "What we offer",
+    "offer1": {
+      "title": "Sales & Marketing Platform",
+      "desc": "Advanced search engine to filter companies and access detailed profiles."
+    },
+    "offer2": {
+      "title": "B2B Digital Marketing",
+      "desc": "Promotion in regional and international markets with content and targeting."
+    },
+    "offer3": {
+      "title": "EasyBusiness Export",
+      "desc": "Export procedures: customs, stats, regulations, docs, references."
+    },
+    "offer4": {
+      "title": "Business Directory",
+      "desc": "Directory structuring data by sector, region, product, etc."
+    },
+    "expertiseTitle": "Our areas of expertise",
+    "expertise1": "Web & Mobile",
+    "expertise2": "Cloud & IT Infrastructure",
+    "expertise3": "Automation (CRM, ERP)",
+    "expertise4": "B2B Monitoring & Data",
+    "expertise5": "B2B Platforms",
+    "expertise6": "Internationalization",
+    "valuesTitle": "Our values",
+    "values": "Excellence – Transparency – Reliability – Innovation",
+    "visionTitle": "Our vision",
+    "vision": "Make Kleer Infini a digital B2B leader in North Africa, connected to the world through intelligent, scalable infrastructure.",
+    "partnersTitle": "Our partners",
+    "partner1": "Export Manager",
+    "partner2": "Tech Partner",
+    "partner3": "Communication Director",
+    "partner4": "Market Manager",
+    "partner5": "Senior Consultant",
+    "partner6": "Data Strategist"
+  },
+    "clientHeader": {
+    "greeting": "Hello,",
+    "clientName": "Client Name",
+    "subtitle": "Ready to explore producers?",
+    "profileAlt": "Client Profile"
+  },
+    "messageBox": {
+    "msg1": "Hello",
+    "msg2": "Hi!",
+    "inputPlaceholder": "Write a message...",
+    "attachmentsLabel": "Attached files:",
+    "attachmentAlt": "attachment"
+  },
+  "profil": {
+    "title": "My Profile",
+    "editInfo": "Edit my personal information",
+    "changePassword": "Change my password",
+    "deleteAccount": "Delete my account",
+    "profilePicture": "Profile Picture",
+    "avatarPlaceholder": "Avatar",
+    "lastName": "Last Name",
+    "firstName": "First Name",
+    "email": "Email Address",
+    "phone": "Phone",
+    "company": "Company",
+    "website": "Website",
+    "updateButton": "Update",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "changePasswordButton": "Change Password",
+    "confirmDeleteMessage": "Are you sure you want to delete your account?",
+    "confirmDelete": "Delete permanently",
+    "cancel": "Cancel",
+    "updated": "Updated info:",
+    "passwordChanged": "Password changed:",
+    "accountDeleted": "Account deleted"
+  },
+  "form": {
+    "registerTitle": "Sign up",
+    "registerSubtitle": "Access detailed product sheets, negotiated prices, and personalized export support.",
+    "nom": "Last Name",
+    "prenom": "First Name",
+    "email": "Email",
+    "password": "Password",
+    "telephone": "Phone",
+    "societe": "Company",
+    "pays": "Country",
+    "secteur": "Business Sector",
+    "langue": "Preferred Language",
+    "siteweb": "Website (optional)",
+    "choose": "Choose",
+    "submit": "Register",
+    "nomRequired": "Last name is required",
+    "prenomRequired": "First name is required",
+    "emailRequired": "Email is required",
+    "invalidEmail": "Invalid email",
+    "passwordRequired": "Password is required",
+    "societeRequired": "Company is required",
+    "telephoneRequired": "Phone is required",
+    "paysRequired": "Country is required",
+    "secteurRequired": "Business sector is required",
+    "langueRequired": "Language is required",
+    "invalidURL": "Invalid URL",
+    "success": "Registration successful!",
+    "noVideoSupport": "Your browser does not support video."
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "search": "Search producers",
+    "requests": "My requests",
+    "messages": "Messaging",
+    "documents": "Received documents",
+    "profile": "My profile",
+    "language": "Language",
+    "logout": "Logout"
+  },
+    "dashboard": {
+    "languageTitle": "Choose your preferred language",
+    "logoutMessage": "Are you sure you want to log out?",
+    "logoutButton": "Log out",
+    "cancelButton": "Cancel",
+    "sectionUnknown": "Section not found"
+  }
+}
+
+

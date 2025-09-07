@@ -8,29 +8,30 @@ import {
 } from "react-icons/fa";
 import backgroundVideo from "../../assets/video2.mp4";
 import "../../App.css";
- // Import du fichier CSS personnalisé
+import { useTranslation } from "react-i18next";
 
 const schema = yup.object().shape({
-  nom: yup.string().required("Nom requis"),
-  prenom: yup.string().required("Prénom requis"),
-  email: yup.string().email("Email invalide").required("Email requis"),
-  password: yup.string().min(6).required("Mot de passe requis"),
-  societe: yup.string().required("Société requise"),
-  telephone: yup.string().required("Téléphone requis"),
-  pays: yup.string().required("Pays requis"),
-  secteur: yup.string().required("Secteur d’activité requis"),
-  langue: yup.string().required("Langue requise"),
-  siteweb: yup.string().url("URL invalide").notRequired(),
+  nom: yup.string().required("form.nomRequired"),
+  prenom: yup.string().required("form.prenomRequired"),
+  email: yup.string().email("form.invalidEmail").required("form.emailRequired"),
+  password: yup.string().min(6).required("form.passwordRequired"),
+  societe: yup.string().required("form.societeRequired"),
+  telephone: yup.string().required("form.telephoneRequired"),
+  pays: yup.string().required("form.paysRequired"),
+  secteur: yup.string().required("form.secteurRequired"),
+  langue: yup.string().required("form.langueRequired"),
+  siteweb: yup.string().url("form.invalidURL").notRequired(),
 });
 
 export default function RegistrationModal() {
+  const { t } = useTranslation();
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
 
   const onSubmit = (data) => {
     console.log("✅ Données envoyées :", data);
-    alert("Inscription réussie !");
+    alert(t("form.success"));
   };
 
   return (
@@ -43,42 +44,42 @@ export default function RegistrationModal() {
         className="background-video fixed"
       >
         <source src={backgroundVideo} type="video/mp4" />
-        Votre navigateur ne supporte pas la vidéo.
+        {t("form.noVideoSupport")}
       </video>
 
       <div className="form-wrapper">
-        <h2 className="form-title">Inscrivez-vous</h2>
+        <h2 className="form-title">{t("form.registerTitle")}</h2>
         <p className="form-subtitle">
-          Pour accéder à des fiches produits détaillées, des prix négociés et un accompagnement export personnalisé.
+          {t("form.registerSubtitle")}
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="registration-form">
-          <Input icon={<FaUser />} label="Nom" name="nom" register={register} error={errors.nom} />
-          <Input icon={<FaUser />} label="Prénom" name="prenom" register={register} error={errors.prenom} />
-          <Input icon={<FaEnvelope />} label="Email" name="email" register={register} error={errors.email} type="email" />
-          <Input icon={<FaLock />} label="Mot de passe" name="password" register={register} error={errors.password} type="password" />
-          <Input icon={<FaPhone />} label="Téléphone" name="telephone" register={register} error={errors.telephone} />
-          <Input icon={<FaBuilding />} label="Société" name="societe" register={register} error={errors.societe} />
-          <Input icon={<FaGlobe />} label="Pays" name="pays" register={register} error={errors.pays} />
-          <Input icon={<FaIndustry />} label="Secteur d’activité" name="secteur" register={register} error={errors.secteur} />
+          <Input icon={<FaUser />} label={t("form.nom")} name="nom" register={register} error={errors.nom} required />
+          <Input icon={<FaUser />} label={t("form.prenom")} name="prenom" register={register} error={errors.prenom} required />
+          <Input icon={<FaEnvelope />} label={t("form.email")} name="email" register={register} error={errors.email} type="email" required />
+          <Input icon={<FaLock />} label={t("form.password")} name="password" register={register} error={errors.password} type="password" required />
+          <Input icon={<FaPhone />} label={t("form.telephone")} name="telephone" register={register} error={errors.telephone} required />
+          <Input icon={<FaBuilding />} label={t("form.societe")} name="societe" register={register} error={errors.societe} required />
+          <Input icon={<FaGlobe />} label={t("form.pays")} name="pays" register={register} error={errors.pays} required />
+          <Input icon={<FaIndustry />} label={t("form.secteur")} name="secteur" register={register} error={errors.secteur} required />
 
           <div className="form-group">
             <label className="form-label">
-              <FaLanguage className="icon" /> Langue préférée
+              <FaLanguage className="icon" /> {t("form.langue")} <span style={{ color: 'red' }}>*</span>
             </label>
             <select {...register("langue")} className="form-input">
-              <option value="">-- Choisir --</option>
+              <option value="">-- {t("form.choose")} --</option>
               <option value="fr">Français</option>
               <option value="en">English</option>
               <option value="ar">العربية</option>
             </select>
-            <p className="form-error">{errors.langue?.message}</p>
+            <p className="form-error">{t(errors.langue?.message)}</p>
           </div>
 
-          <Input icon={<FaLink />} label="Site web (optionnel)" name="siteweb" register={register} error={errors.siteweb} />
+          <Input icon={<FaLink />} label={t("form.siteweb")} name="siteweb" register={register} error={errors.siteweb} />
 
           <button type="submit" className="submit-button">
-            S’inscrire
+            {t("form.submit")}
           </button>
         </form>
       </div>
@@ -86,18 +87,19 @@ export default function RegistrationModal() {
   );
 }
 
-function Input({ icon, label, name, register, error, type = "text" }) {
+function Input({ icon, label, name, register, error, type = "text", required = false }) {
+  const { t } = useTranslation();
   return (
     <div className="form-group">
       <label className="form-label">
-        {icon} {label}
+        {icon} {label} {required && <span style={{ color: 'red' }}>*</span>}
       </label>
       <input
         type={type}
         {...register(name)}
         className="form-input"
       />
-      <p className="form-error">{error?.message}</p>
+      <p className="form-error">{t(error?.message)}</p>
     </div>
   );
 }
