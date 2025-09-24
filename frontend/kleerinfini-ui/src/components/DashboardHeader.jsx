@@ -1,23 +1,61 @@
+import React from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable"; 
+
+export default function DashboardHeader({ activeTab, onAddProductClick, products = [] }) {
+  
+  const exportProductsPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Liste des Produits", 14, 22);
 
 
-export default function DashboardHeader(){
-    return(
-        <div className="bg-white rounded-2xl p-6 shadow-lg mb-6 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-700 to-red-600"></div>
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-blue-700">Dashboard Producteur</h1>
-              <p className="text-slate-600 mt-2">Bienvenue dans votre espace de gestion</p>
-            </div>
-            <div className="flex gap-3">
-              <button className="px-6 py-3 bg-slate-100 text-blue-700 rounded-lg font-semibold hover:bg-slate-200 transition-all duration-300 flex items-center gap-2">
-                📈 Rapport
-              </button>
-              <button className="px-6 py-3 bg-gradient-to-r from-blue-700 to-red-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2">
-                + Nouveau Produit
-              </button>
-            </div>
-          </div>
+    autoTable(doc, {
+      head: [["Nom", "Prix", "Stock", "Status", "Date d'ajout"]],
+      body: products.map(p => [
+        p.name,
+        p.price,
+        p.stock,
+        p.status === "active" ? "Disponible" : "Rupture",
+        p.dateAdded
+      ]),
+      startY: 30,
+      theme: "grid",
+    });
+
+    doc.save("produits.pdf");
+  };
+
+  return (
+    <div className="bg-image-light-beige rounded-2xl p-6 shadow-lg mb-6 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-image-orange to-image-dark-orange"></div>
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-image-dark-text">
+            {activeTab === "products" ? "Gestion des Produits" : "Tableau de Bord Producteur"}
+          </h1>
         </div>
-    )
+        <div className="flex gap-3 flex-wrap">
+          {activeTab === "products" && (
+            <>
+              <button
+                onClick={exportProductsPDF} 
+                className="px-6 py-3 bg-white text-image-dark-text rounded-lg font-semibold hover:bg-image-gray-background transition-all duration-300 flex items-center gap-2 shadow-sm hover:shadow-md"
+              >
+                <span>📈</span>
+                <span>Exporter PDF</span>
+              </button>
+              <button
+                onClick={onAddProductClick}
+                className="px-6 py-3 bg-image-orange text-white rounded-lg font-semibold hover:bg-image-dark-orange transition-all duration-300 flex items-center gap-2 shadow-md"
+              >
+                <span>+</span>
+                <span>Nouveau Produit</span>
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }

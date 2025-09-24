@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -12,6 +13,8 @@ import heroVideo from '../assets/video4.mp4';
 
 
 const DjazagroPage = () => {
+  const navigate = useNavigate();
+
   const featuredProducts = [
     {
       id: 1,
@@ -85,7 +88,10 @@ const DjazagroPage = () => {
       description: "Votre présence continue après le salon"
     }
   ];
-
+    const handleVoirPlus = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
   return (
     <div className="bg-white text-image-dark-text font-sans">
       <Header />
@@ -115,7 +121,10 @@ const DjazagroPage = () => {
               Une vitrine digitale qui connecte vos produits au marché mondial
             </p>
             <div className="mt-6 flex justify-center">
-              <button className="px-6 py-3 bg-orange-500 hover:bg-orange-600 rounded-full text-white text-lg flex items-center gap-2">
+              <button 
+               onClick={() => navigate('/producer-inscription')}
+               className="px-6 py-3 bg-orange-500 hover:bg-orange-600 rounded-full text-white text-lg flex items-center gap-2">
+                
                 <FaUserCheck /> Créer mon profil export maintenant
               </button>
             </div>
@@ -176,10 +185,16 @@ const DjazagroPage = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-            ))}
+              {featuredProducts.map((product) => (
+                <ProductCard 
+                  key={product.id} // always add a key in map
+                  product={product} 
+                  onVoirPlus={handleVoirPlus}
+                  showActions={{ edit: false, delete: false, download: false, voirPlus: true }} 
+                />
+              ))}
             </div>
+
 
             <div className="mt-12 flex justify-center">
             <button className="px-6 py-3 bg-orange-500 hover:bg-orange-600 rounded-full text-white text-lg flex items-center gap-2">
@@ -272,7 +287,9 @@ const DjazagroPage = () => {
               Créez votre profil sur KleerInfini et rejoignez la vitrine algérienne à Djazagro 2025
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button className="bg-white text-image-orange px-8 py-4 rounded-full font-semibold hover:bg-gray-100 flex items-center gap-2 transition-all hover:scale-105">
+              <button
+               onClick={() => navigate('/producer-inscription')} 
+               className="bg-white text-image-orange px-8 py-4 rounded-full font-semibold hover:bg-gray-100 flex items-center gap-2 transition-all hover:scale-105">
                 <FaUserCheck /> Créer mon profil export
               </button>
             </div>
